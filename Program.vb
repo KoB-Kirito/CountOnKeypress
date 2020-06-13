@@ -9,20 +9,20 @@ Module Program
         Console.SetWindowSize(17, 4)
         Console.CursorVisible = False
 
-        Dim defaultValue As Integer
-        Dim noConsoleOutput As Boolean
+        Dim defaultValue(9) As Integer
+        Dim consoleOutput As Boolean
 
         If args.Length > 0 Then
-            Integer.TryParse(args(0), defaultValue)
-        End If
-        If args.Length > 1 Then
-            Boolean.TryParse(args(1), noConsoleOutput)
+            Boolean.TryParse(args(0), consoleOutput)
         End If
 
         Dim counter(9) As Integer
         For i = 0 To 9
-            counter(i) = defaultValue
-            If Not noConsoleOutput AndAlso defaultValue <> 0 Then
+            If args.Length > i + 1 Then
+                Integer.TryParse(args(i + 1), defaultValue(i))
+            End If
+            counter(i) = defaultValue(i)
+            If consoleOutput AndAlso defaultValue(i) <> 0 Then
                 SetCursorPosition(i)
                 Console.Write($"{counter(i),4}")
             End If
@@ -47,7 +47,7 @@ Module Program
                     If GetAsyncKeyState(cKey(i)) Then
                         counter(i) += 1
                         IO.File.WriteAllText($"counter{i}.txt", counter(i))
-                        If Not noConsoleOutput Then
+                        If Not consoleOutput Then
                             SetCursorPosition(i)
                             Console.Write($"{counter(i),4}")
                         End If
@@ -67,7 +67,7 @@ Module Program
                     If GetAsyncKeyState(cKey(i)) Then
                         counter(i) -= 1
                         IO.File.WriteAllText($"counter{i}.txt", counter(i))
-                        If Not noConsoleOutput Then
+                        If Not consoleOutput Then
                             SetCursorPosition(i)
                             Console.Write($"{counter(i),4}")
                         End If
@@ -85,9 +85,9 @@ Module Program
             If GetAsyncKeyState(RESET_KEY) Then
                 For i = 0 To 9
                     If GetAsyncKeyState(cKey(i)) Then
-                        counter(i) = defaultValue
+                        counter(i) = defaultValue(i)
                         IO.File.WriteAllText($"counter{i}.txt", counter(i))
-                        If Not noConsoleOutput Then
+                        If Not consoleOutput Then
                             SetCursorPosition(i)
                             Console.Write($"{counter(i),4}")
                         End If
