@@ -100,6 +100,9 @@ Module Program
                     End If
                 Next
             End If
+
+            'Don't make the cpu too sad
+            Threading.Thread.Sleep(15)
         Loop
 
     End Sub
