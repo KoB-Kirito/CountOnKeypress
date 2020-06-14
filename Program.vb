@@ -16,6 +16,7 @@ Module Program
                 .CountUpKey = ConsoleKey.PageUp,
                 .CountDownKey = ConsoleKey.PageDown,
                 .ResetKey = ConsoleKey.Delete,
+                .CounterKeys = {96, 97, 98, 99, 100, 101, 102, 103, 104, 105},
                 .CounterDefaultValue = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
             }
             Dim tJson = JsonConvert.SerializeObject(tCfg, Formatting.Indented)
@@ -55,24 +56,13 @@ Module Program
             End If
         Next
 
-        Dim cKey() As Integer = {ConsoleKey.NumPad0,
-                                 ConsoleKey.NumPad1,
-                                 ConsoleKey.NumPad2,
-                                 ConsoleKey.NumPad3,
-                                 ConsoleKey.NumPad4,
-                                 ConsoleKey.NumPad5,
-                                 ConsoleKey.NumPad6,
-                                 ConsoleKey.NumPad7,
-                                 ConsoleKey.NumPad8,
-                                 ConsoleKey.NumPad9}
-
         Dim cState(9) As Short
         'Check keypresses forever
         Do
 
             'Fixes bug of states not resetting
             For i = 0 To 9
-                cState(i) = GetAsyncKeyState(cKey(i))
+                cState(i) = GetAsyncKeyState(cfg.CounterKeys(i))
             Next
 
             'Count up
@@ -87,7 +77,7 @@ Module Program
                         End If
 
                         ' Wait to only trigger once per keypress
-                        While GetAsyncKeyState(COUNT_UP_KEY) AndAlso GetAsyncKeyState(cKey(i))
+                        While GetAsyncKeyState(COUNT_UP_KEY) AndAlso GetAsyncKeyState(cfg.CounterKeys(i))
                             Threading.Thread.Sleep(15)
                         End While
 
@@ -108,7 +98,7 @@ Module Program
                         End If
 
                         ' Wait to only trigger once per keypress
-                        While GetAsyncKeyState(COUNT_DOWN_KEY) AndAlso GetAsyncKeyState(cKey(i))
+                        While GetAsyncKeyState(COUNT_DOWN_KEY) AndAlso GetAsyncKeyState(cfg.CounterKeys(i))
                             Threading.Thread.Sleep(15)
                         End While
 
@@ -129,7 +119,7 @@ Module Program
                         End If
 
                         ' Wait to only trigger once per keypress
-                        While GetAsyncKeyState(RESET_KEY) AndAlso GetAsyncKeyState(cKey(i))
+                        While GetAsyncKeyState(RESET_KEY) AndAlso GetAsyncKeyState(cfg.CounterKeys(i))
                             Threading.Thread.Sleep(15)
                         End While
 
@@ -195,5 +185,6 @@ Public Structure Config
     Public CountDownKey2 As Integer
     Public ResetKey As Integer
     Public ResetKey2 As Integer
+    Public CounterKeys As Integer()
     Public CounterDefaultValue As Integer()
 End Structure
